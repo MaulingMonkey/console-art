@@ -1,0 +1,24 @@
+# https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[package]
+name                = "maulingmonkey-console-art"
+version             = "0.0.0-git"
+edition             = "2018"
+repository          = "https://github.com/MaulingMonkey/console-art"
+authors             = ["MaulingMonkey <git@maulingmonkey.com>"]
+readme              = "Readme.md"
+license             = "MIT OR Apache-2.0"
+
+[lib]
+path                = "src/_lib.rs"
+
+[features]
+default             = ["png"]
+
+[dependencies]
+png.version         = "0.17"
+png.optional        = true
+maulingmonkey-console-escape-codes.git = "https://github.com/MaulingMonkey/console-escape-codes"
+
+[dev-dependencies]
+maulingmonkey-console-winapi-wrappers.git = "https://github.com/MaulingMonkey/console-winapi-wrappers"
