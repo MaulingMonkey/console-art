@@ -5,10 +5,7 @@ use maulingmonkey_console_escape_codes::vt100::*;
 use crate::sliders;
 
 fn main() {
-    #[cfg(windows)] {
-        use maulingmonkey_console_winapi_wrappers::*;
-        let _ = change_console_mode(&mut std::io::stdout(), |m| m | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-    }
+    let _art = ArtMode::enable();
     print!("{}", alternate_screen_buffer());
 
     let max = 121; // 120 = divisible by eight

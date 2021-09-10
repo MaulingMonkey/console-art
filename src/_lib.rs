@@ -1,3 +1,4 @@
+mod art_mode;           pub use art_mode::*;
 mod image;              pub use image::*;
 mod ratio;              pub use ratio::*;
 pub mod sliders;

@@ -20,5 +20,8 @@ png.version         = "0.17"
 png.optional        = true
 maulingmonkey-console-escape-codes.git = "https://github.com/MaulingMonkey/console-escape-codes"
 
-[dev-dependencies]
+[target.'cfg(unix)'.dependencies]
+termios             = "0.3"
+
+[target.'cfg(windows)'.dependencies]
 maulingmonkey-console-winapi-wrappers.git = "https://github.com/MaulingMonkey/console-winapi-wrappers"
