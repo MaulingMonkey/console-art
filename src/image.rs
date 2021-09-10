@@ -63,7 +63,7 @@ impl Display for DisplayVT100Basic<'_> {
                     (Some(t), Some(b))  => write!(f, "{}{}\u{2580}", vt100::sgr_foreground_rgb(t), vt100::sgr_background_rgb(b))?,
                 }
             }
-            writeln!(f, "{}", vt100::sgr_default())?;
+            write!(f, "{}\r\n", vt100::sgr_default())?;
         }
         Ok(())
     }
