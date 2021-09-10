@@ -1,3 +1,5 @@
+use crate::*;
+
 use maulingmonkey_console_escape_codes::*;
 use maulingmonkey_console_escape_codes::vt100::*;
 
@@ -5,8 +7,11 @@ use std::fmt::Display;
 
 
 
-pub fn spaces(left: impl Into<Color>, right: impl Into<Color>, mid: usize, width: usize) -> impl Display {
-    let mid = mid.min(width);
+
+
+
+pub fn spaces(left: impl Into<Color>, right: impl Into<Color>, mid: impl Ratio, width: usize) -> impl Display {
+    let mid = mid.to_0n_clamped(width);
     format!(
         "{left}{empty: >mid$}{right}{empty: >width_mid$}{reset}",
         left        = vt100::sgr_background_color(left),
@@ -18,10 +23,11 @@ pub fn spaces(left: impl Into<Color>, right: impl Into<Color>, mid: usize, width
     )
 }
 
-pub fn eighth_blocks(left: impl Into<Color>, right: impl Into<Color>, mid8: usize, width8: usize) -> impl Display {
-    if width8 == 0 { return String::new(); }
+pub fn eighth_blocks(left: impl Into<Color>, right: impl Into<Color>, mid: impl Ratio, width: usize) -> impl Display {
+    if width == 0 { return String::new(); }
 
-    let mid8            = mid8.min(width8);
+    let width8          = width * 8;
+    let mid8            = mid.to_0n_clamped(width8);
     let total_blocks    = (width8+7)/8;
     let full_blocks     = mid8/8;
     let mid_ch          = ["", "\u{258F}", "\u{258E}", "\u{258D}", "\u{258C}", "\u{258B}", "\u{258A}", "\u{2589}"][mid8 & 7];
@@ -41,22 +47,12 @@ pub fn eighth_blocks(left: impl Into<Color>, right: impl Into<Color>, mid8: usiz
     )
 }
 
-pub fn text(left: impl Into<Style>, right: impl Into<Style>, mid: usize, n: usize, text: impl AsRef<str>) -> impl Display {
+pub fn text(left: impl Into<Style>, right: impl Into<Style>, mid: impl Ratio, text: impl AsRef<str>) -> impl Display {
     let left    = left.into();
     let right   = right.into();
     let text    = text.as_ref();
-    let mid     = mid.min(n);
-
-
-    let (mid, n) = if n.checked_mul(text.len()).is_some() {
-        (mid, n)
-    } else {
-        (mid / text.len(), n / text.len())
-    };
-
-    let mid_len = mid * text.len();
-
-    let mid = text.char_indices().find(|(idx, _ch)| idx * n >= mid_len).map(|(idx, _ch)| idx).unwrap_or(text.len());
+    let mid     = mid.to_0n_clamped(text.len());
+    let mid     = text.char_indices().find(|&(idx, _ch)| idx >= mid).map(|(idx, _ch)| idx).unwrap_or(text.len()); // round mid up to character bound
     let left_text = &text[0 .. mid];
     let right_text = &text[mid ..];
     format!(
