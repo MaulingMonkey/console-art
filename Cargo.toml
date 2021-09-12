@@ -22,6 +22,7 @@ maulingmonkey-console-escape-codes.git = "https://github.com/MaulingMonkey/conso
 
 [target.'cfg(unix)'.dependencies]
 termios             = "0.3"
+libc                = "0.2"
 
 [target.'cfg(windows)'.dependencies]
 maulingmonkey-console-winapi-wrappers.git = "https://github.com/MaulingMonkey/console-winapi-wrappers"
